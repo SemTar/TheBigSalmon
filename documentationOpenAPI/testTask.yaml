@@ -1,0 +1,195 @@
+openapi: 3.0.3
+info:
+  title: Test task
+  description: This API connects to the database 
+    and can perform CRUD operations on the data.
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:3000/
+tags:
+  - name: tableData
+    description: Information about DB tables
+  - name: typeSub
+    description: Information about subscription types
+
+paths:
+  /tableData:
+    get:
+      tags:
+        - tableData
+      summary: Finds all rows from the table 'tableData'
+      responses:
+        200:
+          $ref: '#/components/responses/Success'
+  /typeSub:
+    get:
+      tags:
+        - typeSub
+      summary: Finds all rows from the table 'typeSub'
+      responses:
+        200:
+          $ref: '#/components/responses/Success'
+  /typeSub/create:
+    post:
+      tags:
+        - typeSub
+      summary: Adds a new type of subscriptions
+      description: Adds a new type of subscriptions 
+        in the table 'typeSub'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTypeSub'
+      responses:
+        200:
+          $ref: '#/components/responses/Success'
+        400:
+          $ref: '#/components/responses/BadRequest'
+  /typeSub/update:
+    post:
+      tags:
+        - typeSub
+      summary: Updates type of subscriptions
+      description: Updates type of subscriptions data based on id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTypeSub'
+      responses:
+        200:
+          $ref: '#/components/responses/Success'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /typeSub/delete:
+    post:
+      tags:
+        - typeSub
+      summary: Deletes type of subscriptions
+      description: Deletes type of subscriptions data based on id.
+        It creates delete date in the type_sub table
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Id'
+      responses:
+        200:
+          $ref: '#/components/responses/Success'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+
+
+components:
+  responses:
+    BadRequest:
+        description: The server can't process the request
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: array
+                  items:
+                    type: string
+                    example: field should not be null or undefined
+                error:
+                  type: string
+                  example: Bad Request
+                statusCode:
+                  type: number
+                  example: 400
+    Success:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: string
+            example: success
+    NotFound:
+      description: The requested resource could not be found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Not Found
+              statusCode:
+                type: number
+                example: 404
+  schemas:
+    NewTypeSub:
+      type: object
+      properties:
+        name:
+          type: string
+          example: super long
+          required: true
+        num_sub:
+          type: number
+          example: 0
+          required: true
+        max_num_sub:
+          type: number
+          example: 1000
+          required: true
+        validity:
+          type: number
+          example: 24
+          required: true
+    UpdateTypeSub:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+          required: true
+        name:
+          type: string
+          example: another sub. type
+        num_sub:
+          type: number
+          example: 1
+        max_num_sub:
+          type: number
+          example: 4000
+        validity:
+          type: number
+          example: 6
+    Id:
+      type: object
+      properties:
+        id:
+          type: number
+          required: true
+          example: 1
+  requestBodies:
+    Pet:
+      description: Pet object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Pet'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Pet'
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
